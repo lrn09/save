@@ -31,18 +31,20 @@ public class Main {
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(zipPath);
              ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream)) {
+
             for (File file : list) {
 
-                FileInputStream fileInputStream = new FileInputStream(file);
-                ZipEntry zipEntry = new ZipEntry(file.getName());
-                zipOutputStream.putNextEntry(zipEntry);
+                try (FileInputStream fileInputStream = new FileInputStream(file)) {
+                    ZipEntry zipEntry = new ZipEntry(file.getName());
+                    zipOutputStream.putNextEntry(zipEntry);
 
-                byte[] bytes = new byte[1024];
-                int length;
-                while ((length = fileInputStream.read(bytes)) >= 0) {
-                    zipOutputStream.write(bytes, 0, length);
+                    byte[] bytes = new byte[1024];
+                    int length;
+                    while ((length = fileInputStream.read(bytes)) >= 0) {
+                        zipOutputStream.write(bytes, 0, length);
+                    }
                 }
-                fileInputStream.close();
+
                 File file1 = file;
                 file1.delete();
 
